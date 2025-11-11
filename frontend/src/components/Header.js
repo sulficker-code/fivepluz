@@ -23,11 +23,10 @@ function Header() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        background: "#343434",
+        background: "white",
         padding: "15px 30px",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         position: "relative",
-        color:"#fff",
       }}
     >
       <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>Dashboard</h1>

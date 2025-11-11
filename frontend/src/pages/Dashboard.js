@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import Users from "../pages/Users";
-import Header from "../components/Header";
+import Users from "../pages/Users"; 
+
 
 function Dashboard() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -11,20 +11,9 @@ function Dashboard() {
       case "dashboard":
         return <p>Welcome to your dashboard.</p>;
       case "users":
-        return <Users />;
+        return <Users />; // Show UsersPage component
       default:
         return <p>Page not found</p>;
-    }
-  };
-
-  const getTitle = () => {
-    switch (activePage) {
-      case "dashboard":
-        return "Dashboard";
-      case "users":
-        return "Users Management";
-      default:
-        return "Page";
     }
   };
 
@@ -33,8 +22,42 @@ function Dashboard() {
       <Sidebar activePage={activePage} onMenuClick={setActivePage} />
 
       <div style={{ flex: 1, background: "#f4f4f9" }}>
-        <Header title={getTitle()} />
+        {/* Header */}
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            background: "white",
+            padding: "15px 30px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
+            {activePage === "dashboard" ? "Dashboard" : "Users Management"}
+          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span>Admin</span>
+            <div
+              style={{
+                width: "35px",
+                height: "35px",
+                borderRadius: "50%",
+                background: "#4f46e5",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              U
+            </div>
+          </div>
+        </header>
 
+        {/* Main content */}
         <main style={{ padding: "20px" }}>{renderContent()}</main>
       </div>
     </div>
