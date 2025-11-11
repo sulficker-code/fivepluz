@@ -1,0 +1,57 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  BUILD_DIR: build
+
+cache:
+  paths:
+    - node_modules/
+
+build_app:
+  stage: build
+  image: node:18
+  script:
+    - echo "📦 Installing dependencies..."
+    - npm install
+    - echo "🏗️ Building React app..."
+    - npm run build
+  artifacts:
+    paths:
+      - $BUILD_DIR
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "staging" || $CI_COMMIT_BRANCH == "main"'
+
+deploy_dev:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+  script:
+    - apk add --no-cache lftp
+    - echo "🚀 Deploying to Hostinger (DEV)..."
+    - lftp -u "${FTP_USERNAME_DEV},${FTP_PASSWORD_DEV}" -p ${FTP_PORT} ${FTP_HOST} -e "set ssl:verify-certificate no; mirror -R ${BUILD_DIR}/ /public_html/; quit"
+
+
+
+deploy_staging:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+  script:
+    - apk add --no-cache lftp
+    - echo "🚀 Deploying to Hostinger (STAGING)..."
+    - lftp -u "${FTP_USERNAME_STAGING},${FTP_PASSWORD_STAGING}" -p ${FTP_PORT} ${FTP_HOST}  -e "set ssl:verify-certificate no; mirror -R ${BUILD_DIR}/ /public_html/; quit"
+
+
+deploy_live:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - apk add --no-cache lftp
+    - echo "🚀 Deploying to Hostinger (LIVE)..."
+    - lftp -u "${FTP_USERNAME_LIVE},${FTP_PASSWORD_LIVE}" -p ${FTP_PORT} ${FTP_HOST}  -e "set ssl:verify-certificate no; mirror -R ${BUILD_DIR}/ /public_html/; quit"
